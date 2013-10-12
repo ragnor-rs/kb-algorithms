@@ -37,4 +37,10 @@ public class KnowledgeUnit extends AbstractEntity {
         this.profession = profession;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }
+
