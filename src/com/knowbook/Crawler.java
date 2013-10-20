@@ -63,7 +63,7 @@ public class Crawler {
                 KnowledgeUnit concept = statsEntry.getKey();
                 int count = statsEntry.getValue();
                 float frequency = count / ((float) professionCount);
-                if (frequency >= 0.3f) {   // TODO concept threshold should not be hardcoded
+                if (frequency >= 0.5f) {   // TODO concept threshold should not be hardcoded
                     concepts.add(concept);
                 }
             }
@@ -134,6 +134,8 @@ public class Crawler {
         profession.setName(professionName);
         profession.setParent(branch);
 
+        /*
+
         // look up the profession name
         URL searchProfessionUrl = new URL("http://ru.wikipedia.org/w/api.php?format=json&action=query&list=search&srsearch=" + URLEncoder.encode(profession.getName(), "utf-8") + "&srprop=score&srwhat=text");
         JSONObject resultJson = loadJson(searchProfessionUrl);
@@ -146,20 +148,39 @@ public class Crawler {
         String normalizedName = searchArray.getJSONObject(0).getString("title");
         profession.setUrl("http://ru.wikipedia.org/w/index.php?title=" + URLEncoder.encode(normalizedName, "utf-8"));
 
-        crawlForKnowledgeUnits(profession, normalizedName);
+        */
+
+        String[] ss = professionName.split("[ \\-\\(\\)]");
+        for (String s : ss) {
+            if (!s.equals(professionName) && !s.isEmpty()) {
+                crawlForKnowledgeUnits(profession, s);
+            }
+        }
+        crawlForKnowledgeUnits(profession, professionName);
+
+        System.out.println(profession.getName() + ": " + Arrays.toString(professionConceptsMap.get(profession).toArray()));
 
     }
 
     private void crawlForKnowledgeUnits(Category profession, String normalizedName) throws IOException {
 
-        Set<KnowledgeUnit> concepts = new HashSet<KnowledgeUnit>();
-        professionConceptsMap.put(profession, concepts);
+        // ensure that concept collection for this profession already exists
+        Set<KnowledgeUnit> concepts = professionConceptsMap.get(profession);
+        if (concepts == null) {
+            concepts = new HashSet<KnowledgeUnit>();
+            professionConceptsMap.put(profession, concepts);
+        }
 
         // get articles for the given profession name
         URL linksConceptsUrl = new URL("http://ru.wikipedia.org/w/api.php?format=json&action=query&prop=links&titles=" + URLEncoder.encode(normalizedName, "utf-8"));
         JSONObject resultJson = loadJson(linksConceptsUrl);
         JSONObject pagesJson = resultJson.getJSONObject("query").getJSONObject("pages");
-        JSONArray linksArray = pagesJson.getJSONObject(pagesJson.keys().next().toString()).getJSONArray("links");
+        String pageId = pagesJson.keys().next().toString();
+        JSONObject pageJson = pagesJson.getJSONObject(pageId);
+        if (!pageJson.has("links")) {
+            return; // TODO handle empty results, e.g. search query normalization
+        }
+        JSONArray linksArray = pageJson.getJSONArray("links");
 
         // for each article
         for (int i = 0; i < linksArray.length(); i++) {
@@ -177,8 +198,6 @@ public class Crawler {
             concepts.add(knowledgeUnit);
 
         }
-
-        System.out.println(profession.getName() + ": " + Arrays.toString(concepts.toArray()));
 
     }
 
