@@ -20,12 +20,12 @@ public class Crawler {
 
     public static void main(String[] args) {
         Crawler crawler = new Crawler();
-        crawler.map();
-        crawler.reduce();
+        crawler.mapToProfessions();
+        crawler.reduceToBranches();
     }
 
-    // TODO persist reduce results
-    private void reduce() {
+    // TODO persist reduceToBranches results
+    private void reduceToBranches() {
 
         for (Map.Entry<String, Category> branchMapEntry : branches.entrySet()) {
 
@@ -77,8 +77,8 @@ public class Crawler {
 
     }
 
-    // TODO persist map results
-    private void map() {
+    // TODO persist mapToProfessions results
+    private void mapToProfessions() {
 
         int count = 0;
 
@@ -113,7 +113,7 @@ public class Crawler {
                 crawlForProfession(professionName, branch);
 
                 count ++;
-                if (count == 30) break;
+                //if (count == 30) break;
 
             }
         } catch (FileNotFoundException e) {
@@ -178,7 +178,7 @@ public class Crawler {
         String pageId = pagesJson.keys().next().toString();
         JSONObject pageJson = pagesJson.getJSONObject(pageId);
         if (!pageJson.has("links")) {
-            return; // TODO handle empty results, e.g. search query normalization
+            return; // TODO handle empty results, e.g. search query normalization & redirects
         }
         JSONArray linksArray = pageJson.getJSONArray("links");
 
