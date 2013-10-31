@@ -6,8 +6,6 @@ public class Category extends AbstractEntity {
 
     private String name;
 
-    private String url;
-
     public String getName() {
         return name;
     }
@@ -22,14 +20,6 @@ public class Category extends AbstractEntity {
 
     public void setParent(Category parent) {
         this.parent = parent;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
 }

@@ -27,7 +27,8 @@ public class HttpUtils {
         return stringBuilder.toString();
     }
 
-    public static JSONObject loadJson(URL url) throws IOException {
+    public static JSONObject loadJson(String urlString) throws IOException {
+        URL url = new URL(urlString);
         StringBuilder sb = new StringBuilder();
         BufferedReader br =  new BufferedReader(new InputStreamReader(url.openStream()));
         String line;

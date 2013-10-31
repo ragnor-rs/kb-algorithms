@@ -2,8 +2,8 @@ package com.knowbook;
 
 import com.knowbook.core.internals.CsvProfessionReference;
 import com.knowbook.core.ProfessionDatabase;
+import com.knowbook.core.internals.GoogleNameResolver;
 import com.knowbook.core.internals.WikipediaCrawler;
-import com.knowbook.core.internals.WikipediaNameNormalizer;
 import com.knowbook.model.Category;
 import com.knowbook.model.KnowledgeGraph;
 import com.knowbook.model.KnowledgeUnit;
@@ -14,7 +14,7 @@ public class Main {
     public static void main(String args[]) {
         ProfessionDatabase professionDatabase = new ProfessionDatabase(
                 new CsvProfessionReference(),
-                new WikipediaCrawler(new WikipediaNameNormalizer())
+                new WikipediaCrawler(new GoogleNameResolver())
         );
         professionDatabase.mapToProfessions();
         professionDatabase.reduceToBranches();

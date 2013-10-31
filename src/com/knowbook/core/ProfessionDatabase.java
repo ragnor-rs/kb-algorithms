@@ -39,7 +39,7 @@ public class ProfessionDatabase implements EntityManager {
 
     public final void reduceToBranches() {
         prepare(branchMap, branchConceptsMap);
-        reduce(professionConceptsMap, branchConceptsMap, 0.1f);
+        reduce(professionConceptsMap, branchConceptsMap, 0.2f);
     }
 
     private static void prepare(Map<String, Category> src, Map<Category, List<KnowledgeUnit>> dst) {

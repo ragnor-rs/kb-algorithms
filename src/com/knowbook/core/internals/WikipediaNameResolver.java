@@ -1,18 +1,16 @@
 package com.knowbook.core.internals;
 
 import com.knowbook.core.HttpUtils;
-import com.knowbook.core.NameNormalizer;
+import com.knowbook.core.NameResolver;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-public class WikipediaNameNormalizer implements NameNormalizer {
+public class WikipediaNameResolver implements NameResolver {
 
     @Override
-    public String normalizeProfessionName(String name) {
+    public String resolveProfession(String name) {
 
         String urlString;
 
@@ -26,16 +24,9 @@ public class WikipediaNameNormalizer implements NameNormalizer {
                 "srwhat", "text"
         );
 
-        URL searchProfessionUrl;
-        try {
-            searchProfessionUrl = new URL(urlString);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-
         JSONObject resultJson;
         try {
-            resultJson = HttpUtils.loadJson(searchProfessionUrl);
+            resultJson = HttpUtils.loadJson(urlString);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -47,14 +38,6 @@ public class WikipediaNameNormalizer implements NameNormalizer {
 
         return searchArray.getJSONObject(0).getString("title");
 
-    }
-
-    @Override
-    public String getProfessionUrl(String normalizedName) {
-        return HttpUtils.createUrl(
-                "http://ru.wikipedia.org/w/index.php",
-                "title", normalizedName
-        );
     }
 
 }

@@ -7,17 +7,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.*;
 
 public class WikipediaCrawler implements ConceptCrawler {
 
-    private final NameNormalizer nameNormalizer;
+    private final NameResolver nameResolver;
 
-    public WikipediaCrawler(NameNormalizer nameNormalizer) {
-        this.nameNormalizer = nameNormalizer;
+    public WikipediaCrawler(NameResolver nameResolver) {
+        this.nameResolver = nameResolver;
     }
 
     @Override
@@ -25,7 +22,7 @@ public class WikipediaCrawler implements ConceptCrawler {
 
         List<KnowledgeUnit> concepts = new ArrayList<KnowledgeUnit>();
 
-        String normalizedName = nameNormalizer.normalizeProfessionName(profession.getName());
+        String normalizedName = nameResolver.resolveProfession(profession.getName());
 
         String urlString = HttpUtils.createUrl(
                 "http://ru.wikipedia.org/w/api.php",
@@ -35,17 +32,10 @@ public class WikipediaCrawler implements ConceptCrawler {
                 "titles", normalizedName
         );
 
-        URL linksConceptsUrl;
-        try {
-            linksConceptsUrl = new URL(urlString);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-
         // get articles for the given profession name
         JSONObject resultJson;
         try {
-            resultJson = HttpUtils.loadJson(linksConceptsUrl);
+            resultJson = HttpUtils.loadJson(urlString);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
