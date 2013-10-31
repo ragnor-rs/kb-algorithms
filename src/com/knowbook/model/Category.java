@@ -1,4 +1,4 @@
-package com.knowbook;
+package com.knowbook.model;
 
 public class Category extends AbstractEntity {
 

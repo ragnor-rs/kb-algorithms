@@ -1,4 +1,4 @@
-package com.knowbook;
+package com.knowbook.model;
 
 import java.util.HashSet;
 import java.util.Set;

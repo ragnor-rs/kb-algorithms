@@ -1,15 +1,13 @@
-package com.knowbook;
+package com.knowbook.model;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KnowledgeUnit extends AbstractEntity {
 
     private String url;
 
-    private Category profession;
+    // private final List<Category> professions = new ArrayList<Category>();
 
     private String name;
 
@@ -27,14 +25,6 @@ public class KnowledgeUnit extends AbstractEntity {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public Category getProfession() {
-        return profession;
-    }
-
-    public void setProfession(Category profession) {
-        this.profession = profession;
     }
 
     @Override
